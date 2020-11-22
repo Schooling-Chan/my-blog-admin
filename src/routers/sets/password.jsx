@@ -1,15 +1,29 @@
 // 基本样式
 import React, { useState } from 'react';
-import { Input} from 'antd';
+import { Input, Form } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
+// 引入ajax
+import ajax from '../../util/axios-init';
 
 // 导入样式
 import '../../static/less/main-content.less';
 
+// 反抖函数
+function debounce(fn, interval = 300) {
+    let timeout = null;
+    return function () {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            fn.apply(this, arguments);
+        }, interval);
+    };
+}
+
 function Password(props) {
     const [newPassword, setPass] = useState(null);
+    const [form] = Form.useForm();
 
     return <section className="routerBox">
         {/* 头部 */}
@@ -18,29 +32,51 @@ function Password(props) {
         </div>
 
         {/* 内容 */}
-        <div className="routerBox-form">
-            <div className="routerBox-form-item">
-                <label>用户名</label>
-                <Input placeholder="用户名" prefix={<UserOutlined />} disabled  style={{width: '50%'}} value={props.userData.username}/>
-            </div>
-            <div className="routerBox-form-item">
-                <label>当前密码</label>
-                <Input  placeholder="输入你的密码" style={{width: '50%'}}/>
-            </div>
-            <div className="routerBox-form-item">
-                <label>新密码</label>
-                <Input  placeholder="输入你的新密码" style={{width: '50%'}}/>
-            </div>
-            <div className="routerBox-form-item">
-                <label>确认新密码</label>
-                <Input  placeholder="输入你的新密码" style={{width: '50%'}}/>
-            </div>
-        </div>
+        <Form form={form} className="routerBox-form">
+            <Form.Item label="用户名">
+                <Input placeholder="用户名" prefix={<UserOutlined />} disabled style={{ width: '50%' }} value={props.userData.username} />
+            </Form.Item>
+            <Form.Item label="原密码" rules={[
+                {
+                    required: true,
+                    message: '请输入原密码',
+                },
+            ]}>
+                <Input placeholder="输入你的密码" style={{ width: '50%' }} onChange={debounce(() => {
+                    ajax.put({
+                        url: '/api/user/password'
+                    }).then(res => {
 
-        <div className="content-button-box">
-            <button>确认修改</button>
-        </div>
+                    }).catch(err => console.error(err))
+                })} />
+            </Form.Item>
+            <Form.Item label="新密码" rules={[
+                {
+                    required: true,
+                    message: '请输入新密码',
+                },
+            ]}>
+                <Input placeholder="输入你的新密码" style={{ width: '50%' }} />
+            </Form.Item>
+            <Form.Item label="新密码" rules={[
+                {
+                    required: true,
+                    message: '请确认新密码',
+                },
+            ]}>
+                <Input placeholder="输入你的新密码" style={{ width: '50%' }} />
+            </Form.Item>
+
+            <Form.Item className="content-button-box">
+                <button onClick={() => {
+                    // 确认修改
+
+                }}>确认修改</button>
+            </Form.Item>
+        </Form>
+
+
     </section>
 }
 
-export default connect(state => ({...state.login}))(Password);
+export default connect(state => ({ ...state.login }))(Password);

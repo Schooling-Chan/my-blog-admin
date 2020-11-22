@@ -9,7 +9,7 @@ import { UserOutlined, UnlockOutlined, CheckCircleOutlined } from '@ant-design/i
 import { createHash } from 'crypto';
 
 // 引入axios
-import ajax from '../static/request/axios-init';
+import ajax from '../util/axios-init';
 
 // 导入样式
 import '../static/less/head-nav.less';
@@ -66,7 +66,8 @@ class Login extends React.Component {
         @params / @return: null
     */
     register = () => {
-        let { username, password } = this.state;
+        let { username, password } = this.state,
+            { getUser } = this.props;
 
         if (username === null || password === null) {
             message.error('用户名和密码不能为空')
@@ -84,9 +85,14 @@ class Login extends React.Component {
         }).then(res => {
             if (res.code === 0) {
                 message.success('注册成功');
-                // getUser();
+                getUser();
                 this.props.login({ username });
-                this.props.history.push("/");
+                this.props.history.push({
+                    path: '/',
+                    state: {
+                        user: username
+                    }
+                });
             } else {
                 throw res;
             }
@@ -114,9 +120,14 @@ class Login extends React.Component {
         }).then(res => {
             if (res.code === 0) {
                 message.success('登录成功');
-                // getUser();
+                getUser();
                 this.props.login({ username });
-                this.props.history.push("/");
+                this.props.history.push({
+                    pathname: '/',
+                    state: {
+                        user: username
+                    }
+                });
             } else {
                 throw res;
             }

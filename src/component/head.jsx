@@ -4,17 +4,17 @@ import React from 'react';
 import { MenuFoldOutlined, ReloadOutlined, GlobalOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import action from '../store/action/index';
-import { Input } from 'antd';
+import { Input, message } from 'antd';
 
 // 头部样式
 import '../static/less/head-nav.less';
 
 // 请求
-import ajax from '../static/request/axios-init';
+import ajax from '../util/axios-init';
 
 const { Search } = Input;
 
-class Head extends React.Component {
+class Head extends React.PureComponent {
     constructor(props, context) {
         super(props, context);
         this.state = {
@@ -45,31 +45,34 @@ class Head extends React.Component {
         // }
     }
 
-    /* 
-        获取user名字
-    */
-    componentDidMount() {
-
-    }
-
-    /**
-     * @msg: 获取用户信息
-     * @param {*}
-     * @return {*}
-     */
-    getUser = () => {
+    logout = () => {
         ajax.get({
-            url: "/api/users"
+            url: '/api/logout'
         }).then(res => {
-            console.log(res);
+            if (res.code === 0) {
+                message.success('退出登录成功');
+                this.props.history.push("/login");
+            } else {
+                throw res;
+            }
         }).catch(err => {
+            // message.error(err.msg);
             console.error(err);
         })
     }
 
+    // componentDidUpdate() {
+    //     console.log(this.props);
+    //     let user = this.props.location.state.user;
+    //     if (!this.state.username) {
+    //         this.setState({
+    //             username: user
+    //         })
+    //     }
+    // }
+
     render() {
         let { isShowMenu, isGetUser } = this.props;
-        if (isGetUser) this.getUser();
 
         return <section className="headBox">
             {/* 基本导航栏 */}
@@ -90,7 +93,7 @@ class Head extends React.Component {
 
             {/* 用户模块 */}
             <div className="headBox-user min-box">
-                <span>{this.state.username}</span>
+                <span>{isGetUser ? document.cookie.slice(5) : this.state.username}</span>
                 <dl className="headBox-user-dl">
                     <dd>
                         <NavLink to={"/sets/basic"}>{"基本资料"}</NavLink>
@@ -99,7 +102,7 @@ class Head extends React.Component {
                         <NavLink to={"/sets/password"}>{"修改密码"}</NavLink>
                     </dd>
                     <dd>
-                        <NavLink to={"/login?logout=true"} onClick={e => localStorage.removeItem('mytok')}>{"退出"}</NavLink>
+                        <a onClick={this.logout}>{"退出"}</a>
                     </dd>
                 </dl>
             </div>

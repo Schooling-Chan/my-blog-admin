@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Provider} from 'react-redux';   
-import {HashRouter, Route, Switch, Redirect} from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { HashRouter, Route, Switch, Redirect } from 'react-router-dom';
 import 'antd/dist/antd.css';
 
 //css
@@ -21,7 +21,7 @@ import Home from './routers/home';
 import User from './routers/user';
 import Sets from './routers/sets';
 
-ReactDOM.render( 
+ReactDOM.render(
     <Provider store={store}>
         <HashRouter>
             {/* 公共头部 */}
@@ -30,14 +30,14 @@ ReactDOM.render(
             <LeftNav></LeftNav>
 
             <Switch>
-                <Route path='/' exact component={Home}/>
-                <Route path='/user'  component={User}/>
-                <Route path='/blog'  component={Blog}/>
-                <Route path='/login' exact component={Login}/>
-                <Route path='/sets'  component={Sets}/>
+                <Route path='/' exact component={Home} />
+                <Route path='/user' component={User} />
+                <Route path='/blog' component={Blog} />
+                <Route path='/login' exact component={Login} />
+                <Route path='/sets' component={Sets} />
 
                 {/* 非法页面 */}
-                <Redirect to={ localStorage.getItem('mytok') !== null ? "/?type=unsafe" : '/login'}/>
+                <Redirect to={document.cookie !== '' ? "/?type=unsafe" : '/login'} />
             </Switch>
 
         </HashRouter>

@@ -186,7 +186,7 @@ module.exports = function(webpackEnv) {
             // module chunks which are built will work in web workers as well.
             globalObject: 'this',
         },
-        optimization: {
+        optimization: { //优化
             minimize: isEnvProduction,
             minimizer: [
                 // This is only used in production mode
@@ -262,7 +262,7 @@ module.exports = function(webpackEnv) {
                 name: entrypoint => `runtime-${entrypoint.name}`,
             },
         },
-        resolve: {
+        resolve: { //这些选项更改模块的解析方式。
             // This allows you to set a fallback for where webpack should look for modules.
             // We placed these paths second because we want `node_modules` to "win"
             // if there are any conflicts. This matches Node resolution mechanism.
@@ -302,7 +302,7 @@ module.exports = function(webpackEnv) {
                 new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
             ],
         },
-        resolveLoader: {
+        resolveLoader: { //这组选项与上述属性集相同，但仅用于解析 Webpack 的加载程序包
             plugins: [
                 // Also related to Plug'n'Play, but this time it tells webpack to load its loaders
                 // from the current package.

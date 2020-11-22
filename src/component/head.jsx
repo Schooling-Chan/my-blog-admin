@@ -1,24 +1,24 @@
 // 头部模块
-import {NavLink, withRouter} from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import React from 'react';
-import {MenuFoldOutlined, ReloadOutlined, GlobalOutlined} from '@ant-design/icons';
-import {connect} from 'react-redux';
+import { MenuFoldOutlined, ReloadOutlined, GlobalOutlined } from '@ant-design/icons';
+import { connect } from 'react-redux';
 import action from '../store/action/index';
-import { Input} from 'antd';
+import { Input } from 'antd';
 
 // 头部样式
 import '../static/less/head-nav.less';
 
 // 请求
-import {get} from '../static/request/axios-init';
+import ajax from '../static/request/axios-init';
 
 const { Search } = Input;
 
-class Head extends React.Component{
-    constructor(props, context){
+class Head extends React.Component {
+    constructor(props, context) {
         super(props, context);
         this.state = {
-            username: this.props.userData.username
+            username: this.props.userData.username || document.cookie.slice(5)
         }
     }
 
@@ -30,58 +30,61 @@ class Head extends React.Component{
         事件委托，实现不同功能
     */
     clickChange = async e => {
-        let value = e.target.getAttribute("data-icon");
-        if(!value) return;
-        switch(value){
-            case "menu-fold":
-                await this.props.init();
-                break;
-            case "import":
-                
-                break;
-            case "reload":
-                
-                break;
-        }
+        // let value = e.target.getAttribute("data-icon");
+        // if (!value) return;
+        // switch (value) {
+        //     case "menu-fold":
+        //         await this.props.init();
+        //         break;
+        //     case "import":
+
+        //         break;
+        //     case "reload":
+
+        //         break;
+        // }
     }
 
     /* 
         获取user名字
     */
-    componentDidMount(){
-        let _this = this;
-        if(!this.state.username){
-            // console.log(this.props.userData.username);
-            get()('/login/').then(res => {
-                _this.setState({
-                    username: res.username
-                });
-                _this.props.login({
-                    username: res.username
-                })
-            })
-            return;
-        }
+    componentDidMount() {
 
     }
 
+    /**
+     * @msg: 获取用户信息
+     * @param {*}
+     * @return {*}
+     */
+    getUser = () => {
+        ajax.get({
+            url: "/api/users"
+        }).then(res => {
+            console.log(res);
+        }).catch(err => {
+            console.error(err);
+        })
+    }
 
-    render(){
-        let {isShowMenu} = this.props;
+    render() {
+        let { isShowMenu, isGetUser } = this.props;
+        if (isGetUser) this.getUser();
+
         return <section className="headBox">
             {/* 基本导航栏 */}
-            <ul className="headBox-nav" style={{transform: isShowMenu ? "translateX(220px)" : "translateX(0)"}}>
-                <li onClick={this.clickChange}>
-                    <MenuFoldOutlined style={{fontSize: "16px"}}/>
+            <ul className="headBox-nav" style={{ transform: isShowMenu ? "translateX(220px)" : "translateX(0)" }}>
+                <li onClick={() => this.props.init()}>
+                    <MenuFoldOutlined style={{ fontSize: "16px" }} />
                 </li>
                 <li onClick={this.clickChange}>
-                    <GlobalOutlined style={{fontSize: "16px"}}/>
+                    <GlobalOutlined style={{ fontSize: "16px" }} />
                 </li>
                 <li className="min-box" onClick={this.clickChange}>
-                    <ReloadOutlined style={{fontSize: "16px"}}/>
+                    <ReloadOutlined style={{ fontSize: "16px" }} />
                 </li>
                 <li className="min-box">
-                    <Search placeholder="搜索" onSearch={value => console.log(value)} enterButton style={{verticalAlign: "middle"}} />
+                    <Search placeholder="搜索" onSearch={value => console.log(value)} enterButton style={{ verticalAlign: "middle" }} />
                 </li>
             </ul>
 
@@ -105,4 +108,4 @@ class Head extends React.Component{
 }
 
 
-export default withRouter(connect(state => ({...state.menu, ...state.login}), {...action.menu, ...action.login})(Head));
+export default withRouter(connect(state => ({ ...state.menu, ...state.login }), { ...action.menu, ...action.login })(Head));

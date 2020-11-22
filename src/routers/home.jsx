@@ -1,12 +1,12 @@
 import React from 'react';
 
-export default class Home extends React.Component{
-    constructor(props, context){
+export default class Home extends React.Component {
+    constructor(props, context) {
         super(props, context);
-        if(localStorage.getItem('mytok') === null) this.props.history.push("/login");
+        if (document.cookie === '') this.props.history.push("/login");
     }
 
-    render(){
+    render() {
         return <section>
 
         </section>

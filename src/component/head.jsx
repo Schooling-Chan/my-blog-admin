@@ -17,9 +17,6 @@ const { Search } = Input;
 class Head extends React.PureComponent {
     constructor(props, context) {
         super(props, context);
-        this.state = {
-            username: this.props.userData.username || document.cookie.slice(5)
-        }
     }
 
     /* 
@@ -45,34 +42,9 @@ class Head extends React.PureComponent {
         // }
     }
 
-    logout = () => {
-        ajax.get({
-            url: '/api/logout'
-        }).then(res => {
-            if (res.code === 0) {
-                message.success('退出登录成功');
-                this.props.history.push("/login");
-            } else {
-                throw res;
-            }
-        }).catch(err => {
-            // message.error(err.msg);
-            console.error(err);
-        })
-    }
-
-    // componentDidUpdate() {
-    //     console.log(this.props);
-    //     let user = this.props.location.state.user;
-    //     if (!this.state.username) {
-    //         this.setState({
-    //             username: user
-    //         })
-    //     }
-    // }
 
     render() {
-        let { isShowMenu, isGetUser } = this.props;
+        let { isShowMenu, userData: { username } } = this.props;
 
         return <section className="headBox">
             {/* 基本导航栏 */}
@@ -93,7 +65,7 @@ class Head extends React.PureComponent {
 
             {/* 用户模块 */}
             <div className="headBox-user min-box">
-                <span>{isGetUser ? document.cookie.slice(5) : this.state.username}</span>
+                <span>{username}</span>
                 <dl className="headBox-user-dl">
                     <dd>
                         <NavLink to={"/sets/basic"}>{"基本资料"}</NavLink>
@@ -102,7 +74,12 @@ class Head extends React.PureComponent {
                         <NavLink to={"/sets/password"}>{"修改密码"}</NavLink>
                     </dd>
                     <dd>
-                        <a onClick={this.logout}>{"退出"}</a>
+                        <NavLink to={{
+                            pathname: "/login",
+                            state: {
+                                type: "logout"
+                            }
+                        }}>{"退出"}</NavLink>
                     </dd>
                 </dl>
             </div>
@@ -111,4 +88,4 @@ class Head extends React.PureComponent {
 }
 
 
-export default withRouter(connect(state => ({ ...state.menu, ...state.login }), { ...action.menu, ...action.login })(Head));
+export default connect(state => ({ ...state.menu, ...state.login }), { ...action.menu, ...action.login })(Head);

@@ -19,7 +19,6 @@ import action from '../store/action';
 class Login extends React.Component {
     constructor(props, context, ref) {
         super(props, context, ref);
-
         this.state = {
             username: null,
             password: null,
@@ -56,8 +55,25 @@ class Login extends React.Component {
         })
     }
 
-
-
+    /**
+     * @msg: 退出登录
+     * @param {*}
+     * @return {*}
+     */
+    logout = () => {
+        ajax.get({
+            url: '/api/logout'
+        }).then(res => {
+            if (res.code === 0) {
+                message.success('退出登录成功');
+            } else {
+                throw res;
+            }
+        }).catch(err => {
+            // message.error(err.msg);
+            console.error(err);
+        })
+    }
 
     // 注册
     /* 
@@ -104,8 +120,7 @@ class Login extends React.Component {
 
     // 登录
     login = () => {
-        let { username, password } = this.state,
-            { getUser } = this.props;
+        let { username, password } = this.state;
         if (username === null || password === null) {
             message.error('用户名和密码不能为空')
             return;
@@ -120,7 +135,7 @@ class Login extends React.Component {
         }).then(res => {
             if (res.code === 0) {
                 message.success('登录成功');
-                getUser();
+                // getUser();
                 this.props.login({ username });
                 this.props.history.push({
                     pathname: '/',
@@ -147,6 +162,12 @@ class Login extends React.Component {
         const hashVal = hash.digest('hex'),
             pass = hashVal.slice(3, hashVal.length - 5);
         return pass
+    }
+
+    componentDidMount() {
+        if (this.props.location.state) {
+            this.logout();
+        }
     }
 
     shouldComponentUpdate() {//不需要再次render

@@ -7,15 +7,18 @@ import { UserOutlined, UnlockOutlined, CheckCircleOutlined } from '@ant-design/i
 
 // 加密
 import { createHash } from 'crypto';
+import cryptoJS from 'crypto-js';
 
-// 引入axios
-import ajax from '../util/axios-init';
+
 
 // 导入样式
 import '../static/less/head-nav.less';
 import action from '../store/action';
 
-// get()('/blog/articles').then(res => console.log(res));
+// 导入请求
+import request from '../request/index';
+
+
 class Login extends React.Component {
     constructor(props, context, ref) {
         super(props, context, ref);
@@ -26,7 +29,7 @@ class Login extends React.Component {
     }
 
     // 获取value
-    /* 
+    /*
         失焦获取输入框值事件
         根据状态获取值
         @params / @return: null
@@ -61,14 +64,9 @@ class Login extends React.Component {
      * @return {*}
      */
     logout = () => {
-        ajax.get({
-            url: '/api/logout'
-        }).then(res => {
-            if (res.code === 0) {
-                message.success('退出登录成功');
-            } else {
-                throw res;
-            }
+        request.loginApi.logout().then(res => {
+            message.success('退出登录成功');
+            localStorage.setItem("isLogin", false);
         }).catch(err => {
             // message.error(err.msg);
             console.error(err);
@@ -76,14 +74,13 @@ class Login extends React.Component {
     }
 
     // 注册
-    /* 
+    /*
         注册事件
         根据状态获取值
         @params / @return: null
     */
     register = () => {
-        let { username, password } = this.state,
-            { getUser } = this.props;
+        let { username, password } = this.state;
 
         if (username === null || password === null) {
             message.error('用户名和密码不能为空')
@@ -93,25 +90,17 @@ class Login extends React.Component {
         // 提交事件
         password = this.encrytion();
 
-        ajax.post({
-            url: "/api/register",
-            headers: {
-                "Set-User": `username=${username}&&password=${password}`
-            }
-        }).then(res => {
-            if (res.code === 0) {
-                message.success('注册成功');
-                getUser();
-                this.props.login({ username });
-                this.props.history.push({
-                    path: '/',
-                    state: {
-                        user: username
-                    }
-                });
-            } else {
-                throw res;
-            }
+        const reqHead = cryptoJS.enc.Base64.stringify(cryptoJS.enc.Utf8.parse(`username=${username}&&password=${password}`));
+        request.loginApi.register(reqHead).then(res => {
+            message.success('注册成功');
+            this.props.login({ username });
+            this.props.history.push({
+                path: '/',
+                state: {
+                    user: username
+                }
+            });
+            localStorage.setItem("isLogin", true);
         }).catch(err => {
             message.error(err.msg);
             console.error(err);
@@ -127,25 +116,17 @@ class Login extends React.Component {
         }
         // 提交事件
         password = this.encrytion();//密码加密
-        ajax.post({
-            url: "/api/login",
-            headers: {
-                "Set-User": `username=${username}&&password=${password}`
-            }
-        }).then(res => {
-            if (res.code === 0) {
-                message.success('登录成功');
-                // getUser();
-                this.props.login({ username });
-                this.props.history.push({
-                    pathname: '/',
-                    state: {
-                        user: username
-                    }
-                });
-            } else {
-                throw res;
-            }
+        const reqHead = cryptoJS.enc.Base64.stringify(cryptoJS.enc.Utf8.parse(`username=${username}&&password=${password}`));
+        request.loginApi.login(reqHead).then(res => {
+            message.success('登录成功');
+            this.props.login({ username });
+            this.props.history.push({
+                pathname: '/',
+                state: {
+                    user: username
+                }
+            });
+            localStorage.setItem("isLogin", true);
         }).catch(err => {
             message.error(err.msg);
             console.error(err);
@@ -165,7 +146,7 @@ class Login extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.location.state) {
+        if (this.props.location.search) {
             this.logout();
         }
     }
@@ -177,7 +158,7 @@ class Login extends React.Component {
     render() {
         return (<section className="loginBox">
             <div className="loginBox-user">
-                <h2>loginAdmin</h2>
+                <h2>登录界面</h2>
 
 
                 <div className="loginBox-user-form">

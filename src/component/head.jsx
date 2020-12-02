@@ -8,9 +8,9 @@ import { Input, message } from 'antd';
 
 // 头部样式
 import '../static/less/head-nav.less';
+// 导入请求
+import request from '../request/index';
 
-// 请求
-import ajax from '../util/axios-init';
 
 const { Search } = Input;
 
@@ -19,7 +19,7 @@ class Head extends React.PureComponent {
         super(props, context);
     }
 
-    /* 
+    /*
         @params: e事件对象
 
         @return: undefined
@@ -42,6 +42,16 @@ class Head extends React.PureComponent {
         // }
     }
 
+    componentDidMount() {
+        let { userData } = this.props;
+        if (!Object.keys(userData).length && localStorage.getItem("isLogin") !== "false") {
+            request.loginApi.isLogout().catch(err => {
+                message.error(err.msg);
+                window.location.href = window.location.href + "login?type=logout"
+                console.error(err);
+            })
+        }
+    }
 
     render() {
         let { isShowMenu, userData: { username } } = this.props;
@@ -65,7 +75,7 @@ class Head extends React.PureComponent {
 
             {/* 用户模块 */}
             <div className="headBox-user min-box">
-                <span>{username}</span>
+                <span>{username || document.cookie.slice(5)}</span>
                 <dl className="headBox-user-dl">
                     <dd>
                         <NavLink to={"/sets/basic"}>{"基本资料"}</NavLink>
@@ -76,9 +86,7 @@ class Head extends React.PureComponent {
                     <dd>
                         <NavLink to={{
                             pathname: "/login",
-                            state: {
-                                type: "logout"
-                            }
+                            search: "?type=logout"
                         }}>{"退出"}</NavLink>
                     </dd>
                 </dl>

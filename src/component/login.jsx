@@ -92,10 +92,11 @@ class Login extends React.Component {
 
         const reqHead = cryptoJS.enc.Base64.stringify(cryptoJS.enc.Utf8.parse(`username=${username}&&password=${password}`));
         request.loginApi.register(reqHead).then(res => {
+            console.log(this.props.history);
             message.success('注册成功');
             this.props.login({ username });
             this.props.history.push({
-                path: '/',
+                pathname: '/',
                 state: {
                     user: username
                 }

@@ -1,8 +1,8 @@
 // 基本样式
 import React, { useState } from 'react';
-import { Dropdown, Button, Menu, Input, Radio} from 'antd';
+import { Dropdown, Button, Menu, Input, Radio } from 'antd';
 import { DownOutlined, UserOutlined } from '@ant-design/icons';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 // 导入样式
 import '../../static/less/main-content.less';
@@ -10,14 +10,14 @@ import '../../static/less/main-content.less';
 // 下拉菜单
 const menu = (
     <Menu >
-      <Menu.Item key="1" icon={<UserOutlined />}>
-        1st menu item
+        <Menu.Item key="1" icon={<UserOutlined />}>
+            1st menu item
       </Menu.Item>
-      <Menu.Item key="2" icon={<UserOutlined />}>
-        2nd menu item
+        <Menu.Item key="2" icon={<UserOutlined />}>
+            2nd menu item
       </Menu.Item>
-      <Menu.Item key="3" icon={<UserOutlined />}>
-        3rd menu item
+        <Menu.Item key="3" icon={<UserOutlined />}>
+            3rd menu item
       </Menu.Item>
     </Menu>
 );
@@ -46,11 +46,11 @@ function Info(props) {
             </div>
             <div className="routerBox-form-item">
                 <label>用户名</label>
-                <Input placeholder="用户名" prefix={<UserOutlined />} disabled  style={{width: '80%'}} value={props.userData.username}/>
+                <Input placeholder="用户名" prefix={<UserOutlined />} disabled style={{ width: '80%' }} value={props.userData.username || document.cookie.slice(5)} />
             </div>
             <div className="routerBox-form-item">
                 <label>手机</label>
-                <Input  placeholder="输入你的手机号" style={{width: '80%'}}/>
+                <Input placeholder="输入你的手机号" style={{ width: '80%' }} />
             </div>
             <div className="routerBox-form-item">
                 <label>性别</label>
@@ -61,16 +61,16 @@ function Info(props) {
             </div>
             <div className="routerBox-form-item">
                 <label>邮箱</label>
-                <Input  placeholder="输入你的邮箱" style={{width: '80%'}}/>
+                <Input placeholder="输入你的邮箱" style={{ width: '80%' }} />
             </div>
             <div className="routerBox-form-item">
                 <label>签名</label>
-                <TextArea placeholder="输入你的签名" allowClear  style={{width: '80%', minHeight: '100px'}} allowClear/>
+                <TextArea placeholder="输入你的签名" allowClear style={{ width: '80%', minHeight: '100px' }} allowClear />
             </div>
         </div>
 
-        <Button style={{margin: "35px 40px"}} type="primary">确认修改</Button>
+        <Button style={{ margin: "35px 40px" }} type="primary">确认修改</Button>
     </section>
 }
 
-export default connect(state => ({...state.login}))(Info);
+export default connect(state => ({ ...state.login }))(Info);

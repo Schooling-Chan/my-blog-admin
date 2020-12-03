@@ -64,9 +64,11 @@ class Login extends React.Component {
      * @return {*}
      */
     logout = () => {
+        if (localStorage.getItem("isLogin") === "false") return;
         request.loginApi.logout().then(res => {
             message.success('退出登录成功');
             localStorage.setItem("isLogin", false);
+            localStorage.setItem("shahsxpb", "");
         }).catch(err => {
             // message.error(err.msg);
             console.error(err);
@@ -102,6 +104,7 @@ class Login extends React.Component {
                 }
             });
             localStorage.setItem("isLogin", true);
+            localStorage.setItem("shahsxpb", res.shshshfpa);
         }).catch(err => {
             message.error(err.msg);
             console.error(err);
@@ -128,6 +131,7 @@ class Login extends React.Component {
                 }
             });
             localStorage.setItem("isLogin", true);
+            localStorage.setItem("shahsxpb", res.shshshfpa);
         }).catch(err => {
             message.error(err.msg);
             console.error(err);

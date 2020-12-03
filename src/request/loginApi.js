@@ -1,5 +1,6 @@
 // 引入axios
 import ajax from '../util/axios-init';
+//登录有关请求
 // 退出登录
 function logout() {
     return ajax.get({

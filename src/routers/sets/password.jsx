@@ -4,8 +4,8 @@ import { Input, Form } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 
-// 引入ajax
-import ajax from '../../util/axios-init';
+// 导入请求
+import request from '../../request/index';
 
 // 导入样式
 import '../../static/less/main-content.less';
@@ -25,6 +25,14 @@ function Password(props) {
     const [newPassword, setPass] = useState(null);
     const [form] = Form.useForm();
 
+    const onFinish = values => {
+        console.log('Received values of form: ', values);
+    };
+
+    const checkPass = () => {
+        // request.checkPass().catch(err => console.error(err))
+    }
+
     return <section className="routerBox">
         {/* 头部 */}
         <div className="routerBox-head">
@@ -32,9 +40,10 @@ function Password(props) {
         </div>
 
         {/* 内容 */}
-        <Form form={form} className="routerBox-form">
+        <Form form={form} className="routerBox-form"
+            onFinish={onFinish}>
             <Form.Item label="用户名">
-                <Input placeholder="用户名" prefix={<UserOutlined />} disabled style={{ width: '50%' }} value={props.userData.username} />
+                <Input placeholder="用户名" prefix={<UserOutlined />} disabled style={{ width: '50%' }} value={props.userData.username || document.cookie.slice(5)} />
             </Form.Item>
             <Form.Item label="原密码" rules={[
                 {
@@ -42,13 +51,7 @@ function Password(props) {
                     message: '请输入原密码',
                 },
             ]}>
-                <Input placeholder="输入你的密码" style={{ width: '50%' }} onChange={debounce(() => {
-                    ajax.put({
-                        url: '/api/user/password'
-                    }).then(res => {
-
-                    }).catch(err => console.error(err))
-                })} />
+                <Input placeholder="输入你的密码" style={{ width: '50%' }} onChange={debounce(checkPass)} />
             </Form.Item>
             <Form.Item label="新密码" rules={[
                 {

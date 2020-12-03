@@ -11,10 +11,13 @@ axios.interceptors.response.use(function(response) {
 // http request拦截器 添加一个请求拦截器
 axios.interceptors.request.use((config) => {
     // Do something before request is sent
-    let token = window.localStorage.getItem("mytok")
-    if (token) {
-        config.headers["accessToken"] = token; //将token放到请求头发送给服务器
-        return config;
+    let token = window.localStorage.getItem("shahsxpb");
+    let isLogin = window.localStorage.getItem("isLogin");
+    if (token !== "") {
+        config.headers["Oc-Pd"] = token; //将token放到请求头发送给服务器
+    }
+    if (isLogin === "true") {
+        config.headers["Oc-Is"] = isLogin;
     }
     return config;
 });

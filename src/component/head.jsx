@@ -47,7 +47,7 @@ class Head extends React.PureComponent {
         if (!Object.keys(userData).length && localStorage.getItem("isLogin") !== "false") {
             request.loginApi.isLogout().catch(err => {
                 message.error(err.msg);
-                window.location.href = window.location.href + "login?type=logout"
+                window.location.href = "#/login?type=logout"
                 console.error(err);
             })
         }

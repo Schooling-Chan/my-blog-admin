@@ -1,7 +1,7 @@
 // 头部模块
-import { NavLink, withRouter } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import React from 'react';
-import { MenuFoldOutlined, ReloadOutlined, GlobalOutlined } from '@ant-design/icons';
+import { MenuFoldOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import action from '../store/action/index';
 import { Input, message } from 'antd';
@@ -19,35 +19,15 @@ class Head extends React.PureComponent {
         super(props, context);
     }
 
-    /*
-        @params: e事件对象
-
-        @return: undefined
-
-        事件委托，实现不同功能
-    */
-    clickChange = async e => {
-        // let value = e.target.getAttribute("data-icon");
-        // if (!value) return;
-        // switch (value) {
-        //     case "menu-fold":
-        //         await this.props.init();
-        //         break;
-        //     case "import":
-
-        //         break;
-        //     case "reload":
-
-        //         break;
-        // }
-    }
-
     componentDidMount() {
         let { userData } = this.props;
+
         if (!Object.keys(userData).length && localStorage.getItem("isLogin") !== "false") {
             request.loginApi.isLogout().catch(err => {
                 message.error(err.msg);
-                window.location.href = "#/login?type=logout"
+                // window.history.pushState({ type: "logout" }, "", "/#/login");
+                window.history.pushState(null, "", "/#/login");
+                // 通过history.state来获取history.pushState state
                 console.error(err);
             })
         }
@@ -55,18 +35,11 @@ class Head extends React.PureComponent {
 
     render() {
         let { isShowMenu, userData: { username } } = this.props;
-
         return <section className="headBox">
             {/* 基本导航栏 */}
             <ul className="headBox-nav" style={{ transform: isShowMenu ? "translateX(220px)" : "translateX(0)" }}>
                 <li onClick={() => this.props.init()}>
                     <MenuFoldOutlined style={{ fontSize: "16px" }} />
-                </li>
-                <li onClick={this.clickChange}>
-                    <GlobalOutlined style={{ fontSize: "16px" }} />
-                </li>
-                <li className="min-box" onClick={this.clickChange}>
-                    <ReloadOutlined style={{ fontSize: "16px" }} />
                 </li>
                 <li className="min-box">
                     <Search placeholder="搜索" onSearch={value => console.log(value)} enterButton style={{ verticalAlign: "middle" }} />
@@ -86,7 +59,9 @@ class Head extends React.PureComponent {
                     <dd>
                         <NavLink to={{
                             pathname: "/login",
-                            search: "?type=logout"
+                            state: {
+                                type: "logout"
+                            }
                         }}>{"退出"}</NavLink>
                     </dd>
                 </dl>

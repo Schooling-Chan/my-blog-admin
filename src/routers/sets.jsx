@@ -16,7 +16,9 @@ class Sets extends React.Component {
     }
     render() {
         let { isShowMenu } = this.props;
-        return <section className='contentBox' style={{ left: isShowMenu ? "220px" : "0" }}>
+        return <section className='contentBox' style={{
+            left: isShowMenu ? "220px" : "0",
+        }}>
             <Switch>
                 <Route path='/sets/basic' component={Info} />
                 <Route path='/sets/password' component={Password} />

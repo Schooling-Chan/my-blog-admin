@@ -1,106 +1,101 @@
 import React, { useState } from 'react';
 
 // 导入组件
-import {NavLink} from 'react-router-dom';
-import { Checkbox, Pagination  } from 'antd';
+import { NavLink } from 'react-router-dom';
+import { Checkbox, Pagination, Button, Breadcrumb, Table, Space } from 'antd';
 
 // 导入样式
 import '../static/less/main-content.less';
 
 
+//表格数据
+const data = [
+    {
+        id: '1',
+        title: 'js继承js继承js继承js继承js继承js继承js继承js继承js继承js继承',
+        updateTime: '2020-12-20',
+    },
+    {
+        id: '2',
+        title: 'js继承js继承js继承js继承js继承js继承js继承js继承js继承js继承',
+        updateTime: '2020-12-20',
+    },
+    {
+        id: '3',
+        title: 'Joe Black',
+        updateTime: '2020-12-20',
+    },
+    {
+        id: '4',
+        title: 'Disabled User',
+        updateTime: '2020-12-20',
+    },
+];
 
 export default function Articles(props) {
     // 判断哪个页面
-    let {type, buttonType = "编辑", articlesType = "文章分类", thead:{id, title, time, operation}, menuType = "博客管理"} = props;
-    return <section style={{width: "100%",overflowX: "hidden"}}>
+    const { type, buttonType = "编辑", articlesType = "文章分类", thead: { id, title, time, operation }, menuType = "博客管理" } = props;
+
+    // 表格头部
+    const columns = [
+        {
+            title: id,
+            dataIndex: 'id'
+        },
+        {
+            title: title,
+            dataIndex: 'title',
+        },
+        {
+            title: time,
+            dataIndex: 'updateTime',
+        },
+        {
+            title: '操作',
+            dataIndex: 'action',
+            render: () => (
+                <Space size="middle">
+                    <a>删除</a>
+                    <a>
+                        {buttonType}
+                    </a>
+                </Space>
+            ),
+        },
+    ];
+
+    return <section style={{ width: "100%", overflowX: "hidden" }}>
         {/* 头部 */}
-        <div className="content-head-box">
+        <Breadcrumb className="content-head-box">
+            <Breadcrumb.Item>
                 <NavLink to="/blog/">{menuType}</NavLink>
-            <span>/</span>
-            <NavLink to="/blog/articles">{articlesType}</NavLink>
-            {type ? (<>
-                <span>/</span>
-                <NavLink to="/blog/articles">{type}</NavLink>
-            </>) : " "}
-        </div>
-        
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+                {articlesType}
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>{type}</Breadcrumb.Item>
+        </Breadcrumb>
+
         {/* 按钮 */}
         <div className="content-button-box">
-            <button type="delete">批量删除</button>
+            <Button>批量删除</Button>
         </div>
 
         {/* 内容 */}
         <div className="content-main-box">
-            <table>
-                <thead className="content-main-box-thead">
-                    <tr>
-                        <th width="5%">
-                            <Checkbox style={{fontSize: "16px"}}></Checkbox>
-                        </th>
-                        <th>
-                            {id}
-                        </th>
-                        <th>
-                            {title}
-                        </th>
-                        <th>
-                            {time}
-                        </th>
-                        <th>
-                            {operation}
-                        </th>
-                    </tr>
-                </thead>
-
-                <tbody className="content-main-box-tbody">
-                    <tr>
-                        <td>
-                            <Checkbox style={{fontSize: "16px"}}></Checkbox>
-                        </td>
-                        <td>
-                            1
-                        </td>
-                        <td>
-                            js继承js继承js继承js继承js继承js继承js继承js继承js继承js继承
-                        </td>
-                        <td>
-                            20201415
-                        </td>
-                        <td>
-                            <div className="content-button-box">
-                                <button type="delete">删除</button>
-                                <button>{buttonType}</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <Checkbox style={{fontSize: "16px"}}></Checkbox>
-                        </td>
-                        <td>
-                            1
-                        </td>
-                        <td>
-                            js继承js继承js继承js继承js继承js继承js继承js继承js继承js继承
-                        </td>
-                        <td>
-                            20201415
-                        </td>
-                        <td>
-                            <div className="content-button-box">
-                                <button type="delete">删除</button>
-                                <button>{buttonType}</button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>    
-
-
-        {/* 尾部分页 */}
-        <div className="footerBox">
-            <Pagination defaultCurrent={1} total={50} />
+            <Table
+                rowSelection={{
+                    onChange: function (selectedRowKeys, selectedRows) {
+                        console.log('====================================');
+                        console.log(selectedRowKeys, selectedRows);
+                        console.log('====================================');
+                    }
+                }}
+                columns={columns}
+                dataSource={data}
+                pagination
+            />
         </div>
+
     </section>
 }

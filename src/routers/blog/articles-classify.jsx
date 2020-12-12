@@ -12,11 +12,14 @@ import '../../static/less/main-content.less';
 export default function Articles() {
     const [clickState, setState] = useState("HTML");
 
-    return <section style={{height: "100%", width: "100%", position: "relative"}}>
+    return <section style={{
+        height: "100%", width: "100%",
+        position: "relative"
+    }}>
         {/* 导航 */}
         <div className="content-head">
             <ul onClick={e => {
-                /* 
+                /*
                     @params: 时间对象
                     @return function 设置state
                 */
@@ -38,15 +41,12 @@ export default function Articles() {
                 <li>
                     <a className={clickState === "Node" ? "content-head-active" : ""} data-attr="Node">Node</a>
                 </li>
-                <li>
-                    <a className={clickState === "Safe" ? "content-head-active" : ""} data-attr="Safe">Safe</a>
-                </li>
             </ul>
         </div>
 
         {/* 主体内容 */}
         <div className="routerBox">
-            <CommonComponent type={clickState} thead={{id: "文章ID", title: "文章标题", time: "上传时间", operation: "操作"}}/>
+            <CommonComponent type={clickState} thead={{ id: "文章ID", title: "文章标题", time: "上传时间" }} />
         </div>
     </section>
 }

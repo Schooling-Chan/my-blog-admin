@@ -77,7 +77,9 @@ module.exports = function(webpackEnv) {
                 loader: MiniCssExtractPlugin.loader,
                 // css is located in `static/css`, use '../../' to locate index.html folder
                 // in production `paths.publicUrlOrPath` can be a relative path
-                options: paths.publicUrlOrPath.startsWith('.') ? { publicPath: '../../' } : {},
+                options: paths.publicUrlOrPath.startsWith('.') ? {
+                    publicPath: '../../'
+                } : {},
             },
             {
                 loader: require.resolve('css-loader'),
@@ -244,7 +246,11 @@ module.exports = function(webpackEnv) {
                         } : false,
                     },
                     cssProcessorPluginOptions: {
-                        preset: ['default', { minifyFontValues: { removeQuotes: false } }],
+                        preset: ['default', {
+                            minifyFontValues: {
+                                removeQuotes: false
+                            }
+                        }],
                     },
                 }),
             ],
@@ -254,6 +260,13 @@ module.exports = function(webpackEnv) {
             splitChunks: {
                 chunks: 'all',
                 name: false,
+                cacheGroups: {
+                    commons: {
+                        name: 'commons',
+                        chunks: 'initial',
+                        minChunks: 2
+                    }
+                }
             },
             // Keep the runtime chunk separated to enable long term caching
             // https://twitter.com/wSokra/status/969679223278505985
@@ -313,7 +326,11 @@ module.exports = function(webpackEnv) {
             strictExportPresence: true,
             rules: [
                 // Disable require.ensure as it's not a standard language feature.
-                { parser: { requireEnsure: false } },
+                {
+                    parser: {
+                        requireEnsure: false
+                    }
+                },
 
                 // First, run the linter.
                 // It's important to do this before Babel processes the JS.
@@ -393,7 +410,9 @@ module.exports = function(webpackEnv) {
                                 presets: [
                                     [
                                         require.resolve('babel-preset-react-app/dependencies'),
-                                        { helpers: true },
+                                        {
+                                            helpers: true
+                                        },
                                     ],
                                 ],
                                 cacheDirectory: true,

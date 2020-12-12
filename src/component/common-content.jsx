@@ -12,21 +12,25 @@ import '../static/less/main-content.less';
 const data = [
     {
         id: '1',
+        key: '1',
         title: 'js继承js继承js继承js继承js继承js继承js继承js继承js继承js继承',
         updateTime: '2020-12-20',
     },
     {
         id: '2',
+        key: '2',
         title: 'js继承js继承js继承js继承js继承js继承js继承js继承js继承js继承',
         updateTime: '2020-12-20',
     },
     {
         id: '3',
+        key: '3',
         title: 'Joe Black',
         updateTime: '2020-12-20',
     },
     {
         id: '4',
+        key: '4',
         title: 'Disabled User',
         updateTime: '2020-12-20',
     },
@@ -93,7 +97,16 @@ export default function Articles(props) {
                 }}
                 columns={columns}
                 dataSource={data}
-                pagination
+                pagination={{
+                    defaultPageSize: 10,
+                    onChange: function (page, pageSize) {
+                        console.log('====================================');
+                        console.log((page, pageSize));
+                        console.log('====================================');
+                    },
+                    pageSizeOptions: [10, 15, 30, 50],
+                }}
+                bordered
             />
         </div>
 

@@ -143,7 +143,7 @@ class Login extends React.Component {
                         ]}
                     >
 
-                        <Input placeholder="请输入密码" prefix={<UnlockOutlined className="site-form-item-icon" />} allowClear type="password" />
+                        <Input.Password placeholder="请输入密码" prefix={<UnlockOutlined className="site-form-item-icon" />} allowClear autoComplete="off" />
                     </Form.Item>
                     {/* <Form.Item
                         name="password"

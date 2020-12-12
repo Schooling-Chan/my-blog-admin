@@ -1,6 +1,6 @@
 // 基本样式
 import React, { useState } from 'react';
-import { Input, Form } from 'antd';
+import { Input, Form, Button } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 
@@ -29,7 +29,10 @@ function Password(props) {
         console.log('Received values of form: ', values);
     };
 
-    const checkPass = () => {
+    const checkPass = (e) => {
+        console.log('====================================');
+        console.log(e.target);
+        console.log('====================================');
         // request.checkPass().catch(err => console.error(err))
     }
 
@@ -40,41 +43,39 @@ function Password(props) {
         </div>
 
         {/* 内容 */}
-        <Form form={form} className="routerBox-form"
+        <Form form={form} className="routerBox-form" name="reset-password"
             onFinish={onFinish}>
-            <Form.Item label="用户名">
-                <Input placeholder="用户名" prefix={<UserOutlined />} disabled style={{ width: '50%' }} value={props.userData.username || document.cookie.slice(5)} />
-            </Form.Item>
-            <Form.Item label="原密码" rules={[
+            <div className="routerBox-form-item">
+                <label>用户名</label>
+                <Input placeholder="用户名" prefix={<UserOutlined />} disabled style={{ width: '50%' }} value={props.userData?.username || document.cookie.slice(5)} />
+            </div>
+            <Form.Item label="原密码" name="oldPassword" rules={[
                 {
                     required: true,
                     message: '请输入原密码',
                 },
             ]}>
-                <Input placeholder="输入你的密码" style={{ width: '50%' }} onChange={debounce(checkPass)} />
+                <Input.Password placeholder="输入你的密码" style={{ width: '50%' }} autoComplete="off" />
             </Form.Item>
-            <Form.Item label="新密码" rules={[
+            <Form.Item label="新密码" name="newPassword" rules={[
                 {
                     required: true,
                     message: '请输入新密码',
                 },
             ]}>
-                <Input placeholder="输入你的新密码" style={{ width: '50%' }} />
+                <Input.Password placeholder="输入你的新密码" style={{ width: '50%' }} autoComplete="off" />
             </Form.Item>
-            <Form.Item label="新密码" rules={[
+            <Form.Item label="新密码" name="checkPassword" rules={[
                 {
                     required: true,
                     message: '请确认新密码',
                 },
             ]}>
-                <Input placeholder="输入你的新密码" style={{ width: '50%' }} />
+                <Input.Password placeholder="输入你的新密码" style={{ width: '50%' }} autoComplete="off" />
             </Form.Item>
 
-            <Form.Item className="content-button-box">
-                <button onClick={() => {
-                    // 确认修改
-
-                }}>确认修改</button>
+            <Form.Item >
+                <Button style={{ margin: "35px 40px" }} type="primary" htmlType="submit">确认修改</Button>
             </Form.Item>
         </Form>
 

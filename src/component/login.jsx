@@ -18,6 +18,69 @@ import action from '../store/action';
 // 导入请求
 import request from '../request/index';
 
+/**
+ *  @msg 验证码生成函数
+ *  @param canvas的Dom元素
+ */
+function setCode(target) {
+    // 随机数生成函数
+    function rn(min, max) {
+        return Math.floor(Math.random() * (max - min) + min)
+    }
+
+    // 随机生成颜色
+    function rc(min, max) {
+        var r = rn(min, max);
+        var g = rn(min, max);
+        var b = rn(min, max);
+        return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    // 生成背景颜色
+    let w = 120,
+        h = 30,
+        ctx = target.getContext('2d'),
+        str = "";
+
+    //绘制背景颜色
+    ctx.fillStyle = rc(180, 230);
+    ctx.fillRect(0, 0, w, h);
+
+    //随机字符串
+    let pool = 'ABCDEFGHIJKLNMOPQRSTUVWXYZ1234567890';
+
+    for (let i = 0; i < 4; i++) {
+        // 取出随机数
+        const ele = pool[rn(0, pool.length)];
+        str += ele;
+        // 随机字体大小
+        const fs = rn(18, 30);
+        // 随机数字旋转
+        let deg = rn(-30, 30);
+        ctx.font = fs + 'px Simhei';
+        ctx.textBaseline = 'top';//文字基线
+        // 设置填充颜色
+        ctx.fillStyle = rc(80, 150);
+        ctx.save();
+        ctx.translate(30 * i + 15, 5);
+        ctx.rotate(deg * Math.PI / 180);
+        ctx.fillText(ele, 0, 0);
+        ctx.restore();
+    }
+
+    // 随机生成干扰线
+    for (let i = 0; i < 5; i++) {
+        ctx.beginPath();
+        ctx.moveTo(rn(0, w), rn(0, h));
+        ctx.lineTo(rn(0, w), rn(0, h));
+        ctx.strokeStyle = rc(180, 230);
+        ctx.closePath();
+        ctx.stroke();
+    }
+
+    return str;
+}
+
 
 class Login extends React.Component {
     constructor(props, context, ref) {
@@ -25,7 +88,9 @@ class Login extends React.Component {
         this.formRef = React.createRef();
         this.state = {
             type: "login",//判断点击按钮类型
+            code: null,//验证码
         }
+        this.canvas = React.createRef();
     }
 
 
@@ -109,13 +174,14 @@ class Login extends React.Component {
         if (this.props.location.state) {
             this.logout();
         }
-    }
-
-    shouldComponentUpdate() {//不需要再次render
-        return false;
+        const canvas = this.canvas.current;
+        this.setState({
+            code: setCode(canvas)
+        })
     }
 
     render() {
+        let { code } = this.state;
         return (<section className="loginBox">
             <Form className="loginBox-user" ref={this.formRef} name="control-ref" onFinish={this.Finish}>
                 <h2>登录界面</h2>
@@ -145,19 +211,41 @@ class Login extends React.Component {
 
                         <Input.Password placeholder="请输入密码" prefix={<UnlockOutlined className="site-form-item-icon" />} allowClear autoComplete="off" />
                     </Form.Item>
-                    {/* <Form.Item
-                        name="password"
-                        rules={[
-                            {
-                                required: true,
-                                message: '请输入您的密码!'
-                            },
-                        ]}
-                    ></Form.Item> */}
-                    <div style={{ display: "flex" }}>
-                        <Input placeholder="输入验证码" prefix={<CheckCircleOutlined className="site-form-item-icon" />} />
-                        <img src="https://www.oschina.net/action/user/captcha" alt="验证码" />
+                    <div style={{ position: "relative" }}>
+                        <Form.Item name="code"
+                            style={{
+                                width: '60%'
+                            }}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: '请输入您的验证码!'
+                                },
+                                ({ getFieldValue }) => ({
+                                    validator(rule, value) {
+                                        if (!value || code === value || code.toLowerCase() === value) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject('验证码错误!');
+                                    },
+                                }),
+                            ]}>
+                            <Input placeholder="输入验证码" prefix={<CheckCircleOutlined className="site-form-item-icon" />} style={{
+                                position: "absolute",
+                                left: 0,
+                                top: 0,
+                            }} allowClear />
+                        </Form.Item>
+                        <canvas ref={this.canvas} width="120" height="30" style={{
+                            position: 'absolute',
+                            right: 0,
+                            top: 0
+                        }}>
+                            您的浏览器不支持canvas，请更换浏览器.
+                        </canvas>
                     </div>
+
+
                 </div>
 
                 <Form.Item>

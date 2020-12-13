@@ -41,7 +41,7 @@ class Head extends React.PureComponent {
                 <li onClick={() => this.props.init()}>
                     <MenuFoldOutlined style={{ fontSize: "16px" }} />
                 </li>
-                <li className="min-box">
+                <li>
                     <Search placeholder="搜索" onSearch={value => console.log(value)} enterButton style={{ verticalAlign: "middle" }} />
                 </li>
             </ul>

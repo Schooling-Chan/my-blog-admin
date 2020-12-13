@@ -22,19 +22,11 @@ function debounce(fn, interval = 300) {
 }
 
 function Password(props) {
-    const [newPassword, setPass] = useState(null);
-    const [form] = Form.useForm();
+    const [form] = Form.useForm();//初始化表单
 
     const onFinish = values => {
         console.log('Received values of form: ', values);
     };
-
-    const checkPass = (e) => {
-        console.log('====================================');
-        console.log(e.target);
-        console.log('====================================');
-        // request.checkPass().catch(err => console.error(err))
-    }
 
     return <section className="routerBox">
         {/* 头部 */}
@@ -46,8 +38,10 @@ function Password(props) {
         <Form form={form} className="routerBox-form" name="reset-password"
             onFinish={onFinish}>
             <div className="routerBox-form-item">
-                <label>用户名</label>
-                <Input placeholder="用户名" prefix={<UserOutlined />} disabled style={{ width: '50%' }} value={props.userData?.username || document.cookie.slice(5)} />
+                <label>用户名:</label>
+                <div style={{ width: '100%' }}>
+                    <Input placeholder="用户名" prefix={<UserOutlined />} disabled style={{ width: '50%' }} value={props.userData?.username || document.cookie.slice(5)} />
+                </div>
             </div>
             <Form.Item label="原密码" name="oldPassword" rules={[
                 {
@@ -65,17 +59,26 @@ function Password(props) {
             ]}>
                 <Input.Password placeholder="输入你的新密码" style={{ width: '50%' }} autoComplete="off" />
             </Form.Item>
-            <Form.Item label="新密码" name="checkPassword" rules={[
-                {
-                    required: true,
-                    message: '请确认新密码',
-                },
-            ]}>
-                <Input.Password placeholder="输入你的新密码" style={{ width: '50%' }} autoComplete="off" />
+            <Form.Item label="新密码" name="checkPassword"
+                dependencies={['newPassword']} rules={[
+                    {
+                        required: true,
+                        message: '请确认新密码',
+                    },
+                    ({ getFieldValue }) => ({
+                        validator(rule, value) {
+                            if (!value || getFieldValue('newPassword') === value) {
+                                return Promise.resolve();
+                            }
+                            return Promise.reject('两次输入的密码不一致!');
+                        },
+                    }),
+                ]}>
+                <Input.Password placeholder="确认你的新密码" style={{ width: '50%' }} autoComplete="off" />
             </Form.Item>
 
             <Form.Item >
-                <Button style={{ margin: "35px 40px" }} type="primary" htmlType="submit">确认修改</Button>
+                <Button type="primary" htmlType="submit">确认修改</Button>
             </Form.Item>
         </Form>
 

@@ -18,16 +18,16 @@
     &-nav {
         transform: translateX(220px);
         position: relative;
-        display: flex;
-        justify-content: space-around;
         height: 55px;
         line-height: 55px;
-        width: 30%;
+        width: 40%;
         transition: all .5s;
+        min-width: 500px;
 
         li {
             display: inline-block;
             cursor: pointer;
+            padding: 0 1.5rem;
         }
     }
 
@@ -150,28 +150,16 @@
     color: #fff;
 }
 
-// 平板
+
+// 手机平板
 @media screen and (max-width: 992px) {
     .headBox {
         &-nav {
-            // transform: translateX(0) !important;
-        }
-    }
-
-    .navBox {
-        // transform: translate3d(-220px,0,0) !important;
-    }
-}
-
-// 手机
-@media screen and (max-width: 760px) {
-    .headBox {
-        &-nav {
-            width: 25%;
+            width: 100%;
         }
 
         .min-box {
-            display: none;
+            visibility: hidden;
         }
     }
 }

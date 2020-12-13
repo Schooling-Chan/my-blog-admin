@@ -1,32 +1,25 @@
 // 基本样式
 import React, { useState } from 'react';
-import { Dropdown, Button, Menu, Input, Radio } from 'antd';
-import { DownOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Input, Radio, Select, Form } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 
 // 导入样式
 import '../../static/less/main-content.less';
-
-// 下拉菜单
-const menu = (
-    <Menu >
-        <Menu.Item key="1" icon={<UserOutlined />}>
-            1st menu item
-      </Menu.Item>
-        <Menu.Item key="2" icon={<UserOutlined />}>
-            2nd menu item
-      </Menu.Item>
-        <Menu.Item key="3" icon={<UserOutlined />}>
-            3rd menu item
-      </Menu.Item>
-    </Menu>
-);
+const { Option } = Select;
 
 // 提取组件
 const { TextArea } = Input;
 
 function Info(props) {
-    const [genderState, setState] = useState(0);//性别
+
+    const [form] = Form.useForm();//初始化表单
+
+    const onFinish = values => {
+        console.log('Received values of form: ', values);
+    };
+
+
     // console.log(props);
     return <section className="routerBox">
         {/* 头部 */}
@@ -35,41 +28,40 @@ function Info(props) {
         </div>
 
         {/* 内容 */}
-        <div className="routerBox-form">
-            <div className="routerBox-form-item">
-                <label>我的角色</label>
-                <Dropdown overlay={menu}>
-                    <Button>
-                        Button <DownOutlined />
-                    </Button>
-                </Dropdown>
-            </div>
-            <div className="routerBox-form-item">
-                <label>用户名</label>
-                <Input placeholder="用户名" prefix={<UserOutlined />} disabled style={{ width: '80%' }} value={props.userData.username || document.cookie.slice(5)} />
-            </div>
-            <div className="routerBox-form-item">
-                <label>手机</label>
-                <Input placeholder="输入你的手机号" style={{ width: '80%' }} />
-            </div>
-            <div className="routerBox-form-item">
-                <label>性别</label>
-                <Radio.Group onChange={e => setState(e.target.value)} value={genderState}>
+        <Form form={form} className="routerBox-form" name="set-user"
+            onFinish={onFinish} >
+            <Form.Item name="select" label="角色" >
+                <Select placeholder="请选择" style={{ width: '50%' }}>
+                    <Option value="china">China</Option>
+                    <Option value="usa">U.S.A</Option>
+                </Select>
+            </Form.Item>
+
+            <Form.Item label="手机" name="phone" >
+                <Input placeholder="输入你的手机号" style={{ width: '50%' }} />
+            </Form.Item>
+            <Form.Item label="性别" name="gender" >
+                <Radio.Group>
                     <Radio value={0}>男</Radio>
                     <Radio value={1}>女</Radio>
                 </Radio.Group>
-            </div>
-            <div className="routerBox-form-item">
-                <label>邮箱</label>
-                <Input placeholder="输入你的邮箱" style={{ width: '80%' }} />
-            </div>
-            <div className="routerBox-form-item">
-                <label>签名</label>
-                <TextArea placeholder="输入你的签名" allowClear style={{ width: '80%', minHeight: '100px' }} allowClear />
-            </div>
-        </div>
+            </Form.Item>
+            <Form.Item label="邮箱" name="email" rules={[
+                {
+                    type: 'email',
+                    message: '邮箱格式不正确!',
+                },
+            ]}>
+                <Input placeholder="输入你的邮箱" style={{ width: '50%' }} />
+            </Form.Item>
+            <Form.Item label="签名" name="remark" >
+                <TextArea placeholder="输入你的签名" allowClear style={{ width: '50%', minHeight: '100px' }} />
+            </Form.Item>
+            <Form.Item >
+                <Button type="primary" htmlType="submit">确认修改</Button>
+            </Form.Item>
+        </Form>
 
-        <Button style={{ margin: "35px 40px" }} type="primary">确认修改</Button>
     </section>
 }
 

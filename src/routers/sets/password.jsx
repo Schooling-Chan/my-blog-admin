@@ -7,6 +7,10 @@ import { connect } from 'react-redux';
 // 导入请求
 import request from '../../request/index';
 
+// 加密
+import { createHash } from 'crypto';
+import cryptoJS from 'crypto-js';
+
 // 导入样式
 import '../../static/less/main-content.less';
 
@@ -26,6 +30,9 @@ function Password(props) {
 
     const onFinish = values => {
         console.log('Received values of form: ', values);
+        const { oldPassword, newPassword } = values;
+        password = this.encrytion(password);//密码加密
+        const reqHead = cryptoJS.enc.Base64.stringify(cryptoJS.enc.Utf8.parse(`username=${username}&&password=${password}`));
     };
 
     return <section className="routerBox">

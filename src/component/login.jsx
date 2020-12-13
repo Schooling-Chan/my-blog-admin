@@ -118,9 +118,6 @@ class Login extends React.Component {
      * @memberof Login
      */
     Finish = (values) => {
-        // console.log('====================================');
-        // console.log(values, this.state.type);
-        // console.log('====================================');
         let { username, password } = values;
         // 提交事件
         password = this.encrytion(password);//密码加密

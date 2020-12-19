@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { HashRouter, Route, Switch, Redirect } from 'react-router-dom';
-import 'antd/dist/antd.css';
+// import 'antd/dist/antd.css';
 
 //css
 import './static/less/reset.css';

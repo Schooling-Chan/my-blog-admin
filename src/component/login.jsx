@@ -174,7 +174,7 @@ class Login extends React.Component {
         const canvas = this.canvas.current;
         this.setState({
             code: setCode(canvas)
-        })
+        });
     }
 
     render() {

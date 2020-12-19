@@ -692,6 +692,15 @@ module.exports = function(webpackEnv) {
         // Turn off performance processing because we utilize
         // our own hints via the FileSizeReporter
         performance: false,
-
+        // 去除打包选项
+        externals: {
+            'react': 'React',
+            'redux': 'Redux',
+            'react-dom': 'ReactDOM',
+            'react-router-dom': 'ReactRouterDOM',
+            'antd': 'antd',
+            "axios": "axios",
+            "crypto-js": "CryptoJS",
+        }
     };
 };

@@ -29,10 +29,10 @@ function Password(props) {
     const [form] = Form.useForm();//初始化表单
 
     const onFinish = values => {
-        console.log('Received values of form: ', values);
-        const { oldPassword, newPassword } = values;
-        password = this.encrytion(password);//密码加密
-        const reqHead = cryptoJS.enc.Base64.stringify(cryptoJS.enc.Utf8.parse(`username=${username}&&password=${password}`));
+        // console.log('Received values of form: ', values);
+        // const { oldPassword, newPassword } = values;
+        // password = this.encrytion(password);//密码加密
+        // const reqHead = cryptoJS.enc.Base64.stringify(cryptoJS.enc.Utf8.parse(`username=${username}&&password=${password}`));
     };
 
     return <section className="routerBox">

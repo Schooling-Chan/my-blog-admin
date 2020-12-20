@@ -33,7 +33,7 @@ ReactDOM.render(
                     alignItems: "center",
                     height: "100vh"
                 }}
-            ><Spin /></div>}>
+            ><Spin tip="Loading..." /></div>}>
                 {/* 公共头部 */}
                 <Head></Head>
                 {/* 左边菜单 */}

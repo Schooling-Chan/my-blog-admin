@@ -1,7 +1,6 @@
 // 基本样式
 import React, { useState } from 'react';
 import { Button, Input, Radio, Select, Form } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 
 // 导入样式
@@ -55,7 +54,7 @@ function Info(props) {
                 <Input placeholder="输入你的邮箱" style={{ width: '50%' }} />
             </Form.Item>
             <Form.Item label="签名" name="remark" >
-                <TextArea placeholder="输入你的签名" allowClear style={{ width: '50%', minHeight: '100px' }} />
+                <TextArea placeholder="输入你的签名" style={{ width: '50%', minHeight: '100px' }} />
             </Form.Item>
             <Form.Item >
                 <Button type="primary" htmlType="submit">确认修改</Button>

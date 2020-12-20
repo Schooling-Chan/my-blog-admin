@@ -705,6 +705,7 @@ module.exports = function(webpackEnv) {
             'antd': 'antd',
             "axios": "axios",
             "crypto-js": "CryptoJS",
+            "react-redux": "ReactRedux"
         },
     };
 };

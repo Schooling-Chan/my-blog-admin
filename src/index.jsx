@@ -1,7 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { HashRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import { Spin } from 'antd';
 
 //css
@@ -12,8 +12,8 @@ import store from './store';
 
 // 自定义组件
 import Login from './component/login';
-const Head = lazy(() => import('./component/head'));
-const LeftNav = lazy(() => import('./component/left-nav'));
+const Head = lazy(() => import(/* webpackPrefetch: true */'./component/head'));
+const LeftNav = lazy(() => import(/* webpackPrefetch: true */'./component/left-nav'));
 
 
 
@@ -25,7 +25,7 @@ const Blog = lazy(() => import('./routers/blog'));
 
 ReactDOM.render(
     <Provider store={store}>
-        <HashRouter>
+        <BrowserRouter>
             <Suspense fallback={<div
                 style={{
                     display: 'flex',
@@ -50,7 +50,7 @@ ReactDOM.render(
                     <Redirect to={document.cookie !== '' ? "/?type=unsafe" : '/login'} />
                 </Switch>
             </Suspense>
-        </HashRouter>
+        </BrowserRouter>
 
     </Provider>,
     document.getElementById('root')

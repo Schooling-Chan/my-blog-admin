@@ -137,6 +137,7 @@ module.exports = function(webpackEnv) {
         //     false : isEnvDevelopment && 'cheap-module-source-map',
         // These are the "entry points" to our application.
         // This means they will be the "root" imports that are included in JS bundle.
+        cache: true,
         entry: [
             // Include an alternative client for WebpackDevServer. A client's job is to
             // connect to WebpackDevServer by a socket and get notified about changes.
@@ -231,6 +232,7 @@ module.exports = function(webpackEnv) {
                         },
                     },
                     sourceMap: shouldUseSourceMap,
+                    parallel: true, //使用多进程
                 }),
                 // This is only used in production mode
                 new OptimizeCSSAssetsPlugin({
@@ -259,6 +261,9 @@ module.exports = function(webpackEnv) {
             // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
             splitChunks: {
                 chunks: 'all',
+                maxInitialRequests: Infinity,
+                minSize: 30000,
+                maxInitialRequests: 30,
                 name: false,
                 cacheGroups: {
                     commons: {
@@ -282,7 +287,7 @@ module.exports = function(webpackEnv) {
             // https://github.com/facebook/create-react-app/issues/253
             modules: ['node_modules', paths.appNodeModules].concat(
                 modules.additionalModulePaths || []
-            ),
+            ), //配置模块的查找范围
             // These are the reasonable defaults supported by the Node ecosystem.
             // We also include JSX as a common component filename extension to support
             // some tools, although we do not recommend using it, see:

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 
 // 导入自定义
-import CommonComponent from "../../component/common-content";
+import CommonComponent from "@C/common-content";
 
 // 导入样式
 import "@S/less/main-content.less";

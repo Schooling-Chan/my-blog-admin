@@ -8,20 +8,18 @@ import { Spin } from "antd";
 import "@S/less/reset.css";
 
 // reducer
-import store from "./store";
+import store from "@Redux";
 
 // 自定义组件
-import Login from "./component/login";
-const Head = lazy(() => import(/* webpackPrefetch: true */ "./component/head"));
-const LeftNav = lazy(() =>
-  import(/* webpackPrefetch: true */ "./component/left-nav")
-);
+import Login from "@C/login";
+const Head = lazy(() => import(/* webpackPrefetch: true */ "@C/head"));
+const LeftNav = lazy(() => import(/* webpackPrefetch: true */ "@C/left-nav"));
 
 // 路由
-const Sets = lazy(() => import("./routers/sets"));
-const User = lazy(() => import("./routers/user"));
-const Home = lazy(() => import("./routers/home"));
-const Blog = lazy(() => import("./routers/blog"));
+const Sets = lazy(() => import("@R/sets"));
+const User = lazy(() => import("@R/user"));
+const Home = lazy(() => import("@R/home"));
+const Blog = lazy(() => import("@R/blog"));
 
 ReactDOM.render(
   <Provider store={store}>

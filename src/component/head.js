@@ -3,13 +3,13 @@ import { NavLink } from "react-router-dom";
 import React from "react";
 import { MenuFoldOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
-import action from "../store/action/index";
+import action from "@Redux/action/index";
 import { Input, message } from "antd";
 
 // 头部样式
 // import "@S/less/head-nav.less";
 // 导入请求
-import request from "../request/index";
+import request from "@Q/index";
 
 const { Search } = Input;
 

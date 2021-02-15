@@ -15,10 +15,10 @@ import cryptoJS from "crypto-js";
 
 // 导入样式
 import "@S/less/head-nav.less";
-import action from "../store/action";
+import action from "@Redux/action";
 
 // 导入请求
-import request from "../request/index";
+import request from "@Q/index";
 
 /**
  *  @msg 验证码生成函数

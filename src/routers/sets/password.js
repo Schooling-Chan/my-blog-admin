@@ -5,7 +5,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
 
 // 导入请求
-import request from "../../request/index";
+import request from "@Q/index";
 
 // 加密
 import { createHash } from "crypto";

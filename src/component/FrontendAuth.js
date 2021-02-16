@@ -7,8 +7,8 @@ export default function FrontendAuth(props) {
   // 如果该路由不用进行权限校验，登录状态下登陆页除外
   // 因为登陆后，无法跳转到登陆页
   // 这部分代码，是为了在非登陆状态下，访问不需要权限校验的路由
-  const targetRouterConfig = routerConfig.find(
-    (item) => item.path === pathname
+  const targetRouterConfig = routerConfig.find((item) =>
+    new RegExp(`^${item.path}`).test(pathname)
   );
 
   if (targetRouterConfig && !targetRouterConfig.auth && !isLogin) {
@@ -23,7 +23,11 @@ export default function FrontendAuth(props) {
       // 如果路由合法，就跳转到相应的路由
       if (targetRouterConfig) {
         return (
-          <Route path={pathname} component={targetRouterConfig.component} />
+          <Route
+            exact
+            path={pathname}
+            component={targetRouterConfig.component}
+          />
         );
       } else {
         // 如果路由不合法，重定向到 404 页面

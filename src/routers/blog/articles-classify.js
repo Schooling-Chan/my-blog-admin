@@ -10,7 +10,6 @@ import "@S/less/main-content.less";
 
 export default function Articles() {
   const [clickState, setState] = useState("HTML");
-
   return (
     <section
       style={{

@@ -162,6 +162,11 @@ class Nav extends React.Component {
                 </NavLink>
               </dd>
               <dd>
+                <NavLink to="/blog/new" activeClassName="navBox-ul-dl-active">
+                  新建文章
+                </NavLink>
+              </dd>
+              <dd>
                 <NavLink
                   to="/blog/message"
                   activeClassName="navBox-ul-dl-active"

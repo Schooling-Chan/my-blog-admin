@@ -10,6 +10,7 @@ const Articles = lazy(() => import("@R/blog/articles-classify"));
 const Message = lazy(() => import("@R/blog/message-center"));
 const Administrators = lazy(() => import("@R/user/user-administrators"));
 const Role = lazy(() => import("@R/user/user-role"));
+const Articles_New = lazy(() => import("@R/blog/articles-new"));
 
 export default [
   { path: "/home", name: "Home", component: Home, auth: true },
@@ -17,6 +18,12 @@ export default [
   { path: "/sets/password", component: Password, name: "Password", auth: true },
   { path: "/blog/articles", component: Articles, name: "Articles", auth: true },
   { path: "/blog/message", component: Message, name: "Message", auth: true },
+  {
+    path: "/blog/new",
+    component: Articles_New,
+    name: "ArticlesNew",
+    auth: true,
+  },
   { path: "/user/role", component: Role, name: "Role", auth: true },
   {
     path: "/user/administrators",

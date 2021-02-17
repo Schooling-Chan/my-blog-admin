@@ -4,8 +4,13 @@ const {
   fixBabelImports,
   overrideDevServer,
   addWebpackAlias,
+  addWebpackPlugin,
 } = require("customize-cra");
 const path = require("path");
+const SimpleProgressWebpackPlugin = require("simple-progress-webpack-plugin");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const CompressionWebpackPlugin = require("compression-webpack-plugin");
+
 // 跨域配置
 const devServerConfig = () => (config) => {
   return {
@@ -22,6 +27,31 @@ const devServerConfig = () => (config) => {
       },
     },
   };
+};
+const addCompression = () => (config) => {
+  if (process.env.NODE_ENV === "production") {
+    config.plugins.push(
+      // gzip压缩
+      new CompressionWebpackPlugin({
+        test: /\.(css|js)$/,
+        // 只处理比1kb大的资源
+        threshold: 1024,
+        // 只处理压缩率低于90%的文件
+        minRatio: 0.9,
+      })
+    );
+  }
+
+  return config;
+};
+
+// 查看打包后各包大小
+const addAnalyzer = () => (config) => {
+  if (process.env.ANALYZER) {
+    config.plugins.push(new BundleAnalyzerPlugin());
+  }
+
+  return config;
 };
 module.exports = {
   webpack: override(
@@ -44,7 +74,13 @@ module.exports = {
       "@R": path.resolve(__dirname, "src/routers"),
       "@Redux": path.resolve(__dirname, "src/store"),
       "@U": path.resolve(__dirname, "src/util"),
-    })
+    }),
+    addCompression(),
+    addAnalyzer(),
+    addWebpackPlugin(
+      // 终端进度条显示
+      new SimpleProgressWebpackPlugin()
+    )
   ),
   devServer: overrideDevServer(devServerConfig()),
 };

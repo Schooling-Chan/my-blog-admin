@@ -1,5 +1,5 @@
 // 头部模块
-import { NavLink } from "react-router-dom";
+import { NavLink, withRouter } from "react-router-dom";
 import React from "react";
 import { MenuFoldOutlined } from "@ant-design/icons";
 import { connect } from "react-redux";
@@ -13,7 +13,7 @@ import request from "@Q/index";
 
 const { Search } = Input;
 
-class Head extends React.PureComponent {
+class Head extends React.Component {
   constructor(props, context) {
     super(props, context);
   }
@@ -27,13 +27,31 @@ class Head extends React.PureComponent {
     ) {
       request.loginApi.isLogout().catch((err) => {
         message.error(err.msg);
-        // window.history.pushState({ type: "logout" }, "", "/#/login");
-        window.history.pushState(null, "", "/login");
-        // 通过history.state来获取history.pushState state
+        this.props.history.push("/login");
         console.error(err);
       });
     }
   }
+  /**
+   * @msg: 退出登录
+   * @param {*}
+   * @return {*}
+   */
+  logout = () => {
+    if (localStorage.getItem("isLogin") === "false") return;
+    request.loginApi
+      .logout()
+      .then((res) => {
+        message.success("退出登录成功");
+        localStorage.setItem("isLogin", false);
+        localStorage.setItem("shahsxpb", "");
+        this.props.history.push("/login");
+      })
+      .catch((err) => {
+        // message.error(err.msg);
+        console.error(err);
+      });
+  };
 
   render() {
     let {
@@ -80,6 +98,7 @@ class Head extends React.PureComponent {
                     type: "logout",
                   },
                 }}
+                onClick={this.logout}
               >
                 {"退出"}
               </NavLink>
@@ -91,7 +110,9 @@ class Head extends React.PureComponent {
   }
 }
 
-export default connect((state) => ({ ...state.menu, ...state.login }), {
-  ...action.menu,
-  ...action.login,
-})(Head);
+export default withRouter(
+  connect((state) => ({ ...state.menu, ...state.login }), {
+    ...action.menu,
+    ...action.login,
+  })(Head)
+);

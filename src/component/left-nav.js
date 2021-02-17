@@ -118,7 +118,7 @@ class Nav extends React.Component {
               }}
             >
               <dd>
-                <NavLink to="/" exact activeClassName="navBox-ul-dl-active">
+                <NavLink to="/home" exact activeClassName="navBox-ul-dl-active">
                   控制台
                 </NavLink>
               </dd>

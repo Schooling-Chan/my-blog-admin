@@ -17,11 +17,6 @@ import routerMap from "@U/router.config.js";
 // import Login from "@C/login";
 const Head = lazy(() => import(/* webpackPrefetch: true */ "@C/head"));
 const LeftNav = lazy(() => import(/* webpackPrefetch: true */ "@C/left-nav"));
-// 路由
-// const Sets = lazy(() => import("@R/sets"));
-// const User = lazy(() => import("@R/user"));
-// const Home = lazy(() => import("@R/home"));
-// const Blog = lazy(() => import("@R/blog"));
 
 ReactDOM.render(
   <Provider store={store}>
@@ -46,15 +41,6 @@ ReactDOM.render(
         <LeftNav></LeftNav>
 
         <Switch>
-          {/* <Route path="/" exact component={Home} />
-          <Route path="/user" component={User} />
-          <Route path="/blog" component={Blog} />
-          <Route path="/login" exact component={Login} />
-          <Route path="/sets" component={Sets} /> */}
-
-          {/* 非法页面 */}
-          {/* <Redirect to={document.cookie !== "" ? "/?type=unsafe" : "/login"} />
-           */}
           <FrontendAuth routerConfig={routerMap} />
         </Switch>
       </Suspense>

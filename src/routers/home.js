@@ -5,6 +5,7 @@ import { Spin } from "antd";
 // css
 import "@S/less/head-nav.less";
 import { childRouter } from "@U/router.config.js";
+import FrontendAuth from "@C/FrontendAuth";
 
 class Home extends React.Component {
   constructor(props, context) {
@@ -21,9 +22,11 @@ class Home extends React.Component {
             left: isShowMenu ? "220px" : "0",
           }}
         >
-          {childRouter.map((item) => (
+          {/* {childRouter.map((item) => (
             <Route exact path={item.path} component={item.component} />
-          ))}
+          ))} */}
+
+          {/* <FrontendAuth routerConfig={childRouter} /> */}
         </section>
       </Suspense>
     );

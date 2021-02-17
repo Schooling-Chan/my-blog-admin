@@ -99,20 +99,20 @@ class Login extends React.Component {
    * @param {*}
    * @return {*}
    */
-  logout = () => {
-    if (localStorage.getItem("isLogin") === "false") return;
-    request.loginApi
-      .logout()
-      .then((res) => {
-        message.success("退出登录成功");
-        localStorage.setItem("isLogin", false);
-        localStorage.setItem("shahsxpb", "");
-      })
-      .catch((err) => {
-        // message.error(err.msg);
-        console.error(err);
-      });
-  };
+  // logout = () => {
+  //   if (localStorage.getItem("isLogin") === "false") return;
+  //   request.loginApi
+  //     .logout()
+  //     .then((res) => {
+  //       message.success("退出登录成功");
+  //       localStorage.setItem("isLogin", false);
+  //       localStorage.setItem("shahsxpb", "");
+  //     })
+  //     .catch((err) => {
+  //       // message.error(err.msg);
+  //       console.error(err);
+  //     });
+  // };
 
   /**
    * 注册和登录函数
@@ -133,7 +133,7 @@ class Login extends React.Component {
           message.success("登录成功");
           this.props.login({ username });
           this.props.history.push({
-            pathname: "/",
+            pathname: "/home",
             state: {
               user: username,
             },
@@ -153,7 +153,7 @@ class Login extends React.Component {
           message.success("注册成功");
           this.props.login({ username });
           this.props.history.push({
-            pathname: "/",
+            pathname: "/home",
             state: {
               user: username,
             },
@@ -178,9 +178,9 @@ class Login extends React.Component {
   };
 
   componentDidMount() {
-    if (this.props.location.state) {
-      this.logout();
-    }
+    // if (this.props.location.state) {
+    //   this.logout();
+    // }
     const canvas = this.canvas.current;
     this.setState({
       code: setCode(canvas),
@@ -196,6 +196,9 @@ class Login extends React.Component {
           ref={this.formRef}
           name="control-ref"
           onFinish={this.Finish}
+          style={{
+            padding: "65px 65px 50px",
+          }}
         >
           <h2>登录界面</h2>
 

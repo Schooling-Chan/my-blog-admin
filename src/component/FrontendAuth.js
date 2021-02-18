@@ -15,6 +15,9 @@ function FrontendAuth(props) {
       // new RegExp(`^${item.path}`).test(pathname)
       item.path === pathname
   );
+  if (pathname === "/") {
+    return <Redirect to="/home" />;
+  }
   if (targetRouterConfig && !targetRouterConfig.auth && !isLogin) {
     const { component } = targetRouterConfig;
     if (pathname !== "/404" && pathname !== "/home" && pathname !== "/login") {

@@ -88,15 +88,21 @@ class ArticlesNew extends React.Component {
               dangerouslySetInnerHTML={{ __html: this.state.md }}
             ></div>
           </section>
-          <Button
-            type="primary"
+          <footer
             style={{
-              margin: "1rem auto",
+              textAlign: "center",
             }}
-            onClick={this.handleSave}
           >
-            保存
-          </Button>
+            <Button
+              type="primary"
+              style={{
+                margin: "1rem auto",
+              }}
+              onClick={this.handleSave}
+            >
+              保存
+            </Button>
+          </footer>
         </div>
       </>
     );

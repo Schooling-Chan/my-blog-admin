@@ -12,7 +12,7 @@ const SimpleProgressWebpackPlugin = require("simple-progress-webpack-plugin");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
-
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 // 跨域配置
 const devServerConfig = () => (config) => {
   return {
@@ -33,22 +33,41 @@ const devServerConfig = () => (config) => {
 
 const addCompression = () => (config) => {
   if (process.env.NODE_ENV === "production") {
-    console.log(config);
     config.optimization.splitChunks = {
       chunks: "all",
       maxInitialRequests: Infinity,
-      minSize: 300000, // 依赖包超过300000bit将被单独打包
+      maxSize: 300000, // 依赖包超过300000bit将被单独打包
       automaticNameDelimiter: "-",
+      // cacheGroups: {
+      //   vendor: {
+      //     test: /[\\/]node_modules[\\/]/,
+      //     name(module) {
+      //       const packageName = module.context.match(
+      //         /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+      //       )[1];
+      //       return `chunk.${packageName.replace("@", "")}`;
+      //     },
+      //     priority: 10,
+      //   },
+      //   commons: {
+      //     name: "vendor",
+      //     chunks: "initial",
+      //     minChunks: 2,
+      //   },
+      // },
       cacheGroups: {
-        vendor: {
+        vendors: {
+          name: `chunk-vendors`,
           test: /[\\/]node_modules[\\/]/,
-          name(module) {
-            const packageName = module.context.match(
-              /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-            )[1];
-            return `chunk.${packageName.replace("@", "")}`;
-          },
-          priority: 10,
+          priority: -10,
+          chunks: "initial",
+        },
+        common: {
+          name: `chunk-common`,
+          minChunks: 2,
+          priority: -20,
+          chunks: "initial",
+          reuseExistingChunk: true,
         },
       },
     };
@@ -104,24 +123,20 @@ module.exports = {
     addWebpackPlugin(
       // 终端进度条显示
       new SimpleProgressWebpackPlugin(),
-      // 使用 ParallelUglifyPlugin 并行压缩输出的 JS 代码
-      new ParallelUglifyPlugin({
-        // 传递给 UglifyJS 的参数
-        // （还是使用 UglifyJS 压缩，只不过帮助开启了多进程）
-        uglifyJS: {
-          output: {
-            beautify: false, // 最紧凑的输出
-            comments: false, // 删除所有的注释
-          },
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          ie8: false,
+          mangle: true,
+          output: { comments: false },
           compress: {
-            // 删除所有的 `console` 语句，可以兼容ie浏览器
+            warnings: false,
             drop_console: true,
-            // 内嵌定义了但是只用到一次的变量
-            collapse_vars: true,
-            // 提取出出现多次但是没有定义成变量去引用的静态值
-            reduce_vars: true,
+            drop_debugger: true,
+            unused: false,
           },
         },
+        sourceMap: true,
+        cache: true,
       })
     )
   ),

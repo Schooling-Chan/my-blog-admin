@@ -11,7 +11,6 @@ const path = require("path");
 const SimpleProgressWebpackPlugin = require("simple-progress-webpack-plugin");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
-const ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 // 跨域配置
 const devServerConfig = () => (config) => {
@@ -30,32 +29,30 @@ const devServerConfig = () => (config) => {
     },
   };
 };
+// 查看打包后各包大小
+const addAnalyzer = () => (config) => {
+  if (process.env.ANALYZER) {
+    config.plugins.push(new BundleAnalyzerPlugin());
+  }
+
+  return config;
+};
 
 const addCompression = () => (config) => {
   if (process.env.NODE_ENV === "production") {
     config.optimization.splitChunks = {
       chunks: "all",
       maxInitialRequests: Infinity,
-      maxSize: 30000, // 依赖包超过300000bit将被单独打包
+      maxSize: 100000, // 依赖包超过300000bit将被单独打包
       automaticNameDelimiter: "-",
-      // cacheGroups: {
-      //   vendor: {
-      //     test: /[\\/]node_modules[\\/]/,
-      //     name(module) {
-      //       const packageName = module.context.match(
-      //         /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-      //       )[1];
-      //       return `chunk.${packageName.replace("@", "")}`;
-      //     },
-      //     priority: 10,
-      //   },
-      //   commons: {
-      //     name: "vendor",
-      //     chunks: "initial",
-      //     minChunks: 2,
-      //   },
-      // },
       cacheGroups: {
+        // styles: {
+        //   name: "styles",
+        //   test: /\.css$/,
+        //   chunks: "all",
+        //   enforce: true,
+        //   priority: 20,
+        // },
         vendors: {
           name: `chunk-vendors`,
           test: /[\\/]node_modules[\\/]/,
@@ -120,6 +117,7 @@ module.exports = {
       "crypto-js": "CryptoJS",
       "react-redux": "ReactRedux",
     }),
+    // addAnalyzer(),
     addWebpackPlugin(
       // 终端进度条显示
       new SimpleProgressWebpackPlugin(),

@@ -12,6 +12,8 @@ const SimpleProgressWebpackPlugin = require("simple-progress-webpack-plugin");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+
 // 跨域配置
 const devServerConfig = () => (config) => {
   return {
@@ -43,7 +45,8 @@ const addCompression = () => (config) => {
     config.optimization.splitChunks = {
       chunks: "all",
       maxInitialRequests: Infinity,
-      maxSize: 100000, // 依赖包超过300000bit将被单独打包
+      maxSize: 102400, // 依赖包超过300000bit将被单独打包
+      minSize: 97280,
       automaticNameDelimiter: "-",
       cacheGroups: {
         // styles: {
@@ -118,6 +121,7 @@ module.exports = {
       "react-redux": "ReactRedux",
     }),
     // addAnalyzer(),
+    // addWebpackPlugin(new ExtractTextPlugin("css/[name].css")),
     addWebpackPlugin(
       // 终端进度条显示
       new SimpleProgressWebpackPlugin(),

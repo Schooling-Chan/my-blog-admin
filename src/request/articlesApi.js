@@ -19,6 +19,27 @@ function saveMD(data) {
       }
     });
 }
+
+// 文章列表
+function mdList(page = {}) {
+  return ajax
+    .get({
+      url: "/api/blog/mdList",
+      data: {
+        page: page.num || 1,
+        pageSize: page.size || 10,
+      },
+    })
+    .then((res) => {
+      if (res.success) {
+        return res;
+      } else {
+        throw res;
+      }
+    });
+}
+
 export default {
   saveMD,
+  mdList,
 };

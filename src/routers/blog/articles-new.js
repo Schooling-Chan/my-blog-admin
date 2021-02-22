@@ -44,10 +44,10 @@ class ArticlesNew extends React.Component {
     request.articlesApi
       .saveMD({ ...this.state })
       .then((res) => {
-        console.log(res);
+        message.success(res.msg);
       })
       .catch((err) => {
-        console.err(err);
+        console.error(err);
         message.error(err.msg);
       });
   };

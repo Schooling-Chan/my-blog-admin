@@ -6,9 +6,11 @@ import { Checkbox, Pagination, Button, Breadcrumb, Table, Space } from "antd";
 
 // 导入样式
 import "@S/less/main-content.less";
+// 导入请求
+import request from "@Q/index";
 
 //表格数据
-const data = [
+const defaultData = [
   {
     id: "1",
     key: "1",
@@ -43,8 +45,9 @@ export default function Articles(props) {
     articlesType = "文章分类",
     thead: { id, title, time, operation },
     menuType = "博客管理",
+    data = defaultData,
+    count = 10,
   } = props;
-
   // 表格头部
   const columns = [
     {
@@ -57,7 +60,7 @@ export default function Articles(props) {
     },
     {
       title: time,
-      dataIndex: "updateTime",
+      dataIndex: "time",
     },
     {
       title: "操作",
@@ -74,13 +77,13 @@ export default function Articles(props) {
   return (
     <section style={{ width: "100%", overflowX: "hidden" }}>
       {/* 头部 */}
-      <Breadcrumb className="content-head-box">
+      {/* <Breadcrumb className="content-head-box">
         <Breadcrumb.Item>
           <NavLink to="/blog/">{menuType}</NavLink>
         </Breadcrumb.Item>
         <Breadcrumb.Item>{articlesType}</Breadcrumb.Item>
         <Breadcrumb.Item>{type}</Breadcrumb.Item>
-      </Breadcrumb>
+      </Breadcrumb> */}
 
       {/* 按钮 */}
       <div className="content-button-box">
@@ -100,13 +103,17 @@ export default function Articles(props) {
           columns={columns}
           dataSource={data}
           pagination={{
+            defaultCurrent: 1, // 默认在哪页
             defaultPageSize: 10,
+            showTotal: (total, range) => `共${count}条记录`,
+            showSizeChanger: true,
             onChange: function (page, pageSize) {
               console.log("====================================");
-              console.log((page, pageSize));
+              console.log(page, pageSize);
               console.log("====================================");
             },
             pageSizeOptions: [10, 15, 30, 50],
+            total: count,
           }}
           bordered
         />

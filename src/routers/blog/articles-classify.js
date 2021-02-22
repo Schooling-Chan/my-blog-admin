@@ -39,6 +39,7 @@ export default function Articles() {
           thead={{ id: "文章ID", title: "文章标题", time: "上传时间" }}
           data={state.data}
           count={state.count}
+          setState={setState}
         />
       </div>
     </section>

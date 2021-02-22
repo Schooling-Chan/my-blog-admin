@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Input, Button, message } from "antd";
+import { withRouter } from "react-router-dom";
 import marked from "marked";
 import hljs from "highlight.js";
 import "highlight.js/styles/atom-one-dark.css";
@@ -31,16 +32,31 @@ class ArticlesNew extends React.Component {
     this.state = {
       md: "",
       title: "",
+      rawData: "",
     };
   }
-
+  // 更新md显示
   handle = (e) => {
     this.setState({
       md: marked(e.target.value).replace(/\<pre\>/g, "<pre class='hljs'>"),
+      rawData: e.target.value,
     });
   };
-
+  // 保存函数
   handleSave = () => {
+    if (this.props.location.search) {
+      const search = this.props.location.search.match(/(?![=]{1})(\w)+/g);
+      request.articlesApi
+        .saveEditMD({ ...this.state, id: search[3] })
+        .then((res) => {
+          message.success(res.msg);
+        })
+        .catch((err) => {
+          console.error(err);
+          message.error(err.msg);
+        });
+      return;
+    }
     request.articlesApi
       .saveMD({ ...this.state })
       .then((res) => {
@@ -51,6 +67,32 @@ class ArticlesNew extends React.Component {
         message.error(err.msg);
       });
   };
+  // 返回函数
+  goBack = (e) => {
+    const search = this.props.location.search.match(/(?![=]{1})(\w)+/g);
+    if (!search) return;
+    this.props.history.push("/blog/articles");
+  };
+
+  componentDidMount() {
+    const search = this.props.location.search.match(/(?![=]{1})(\w)+/g);
+    if (!search) return;
+    const [, type, , id] = search;
+    request.articlesApi
+      .editMD(id)
+      .then((res) => {
+        const item = res.data[0];
+        this.setState({
+          md: item.contents,
+          rawData: item.rawData,
+          title: item.title,
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+        message.error(err.msg);
+      });
+  }
 
   render() {
     return (
@@ -72,6 +114,7 @@ class ArticlesNew extends React.Component {
                 title: e.target.value,
               });
             }}
+            value={this.state.title}
           ></Input>
           <section className="flexBox">
             <div className="leftBox">
@@ -81,6 +124,7 @@ class ArticlesNew extends React.Component {
                   minRows: 30,
                 }}
                 onChange={this.handle}
+                value={this.state.rawData}
               />
             </div>
             <div
@@ -93,6 +137,14 @@ class ArticlesNew extends React.Component {
               textAlign: "center",
             }}
           >
+            <Button
+              style={{
+                marginRight: "1rem",
+              }}
+              onClick={this.goBack}
+            >
+              返回
+            </Button>
             <Button
               type="primary"
               style={{
@@ -108,4 +160,4 @@ class ArticlesNew extends React.Component {
     );
   }
 }
-export default connect((state) => ({ ...state.menu }))(ArticlesNew);
+export default withRouter(connect((state) => ({ ...state.menu }))(ArticlesNew));

@@ -9,6 +9,7 @@ function saveMD(data) {
       data: {
         _h: data.md,
         title: data.title,
+        rawData: data.rawData,
       },
     })
     .then((res) => {
@@ -39,7 +40,66 @@ function mdList(page = {}) {
     });
 }
 
+// 编辑文章
+function editMD(id) {
+  return ajax
+    .get({
+      url: "/api/blog/editMD",
+      data: {
+        id,
+      },
+    })
+    .then((res) => {
+      if (res.success) {
+        return res;
+      } else {
+        throw res;
+      }
+    });
+}
+// 保存编辑文章
+function saveEditMD(data) {
+  return ajax
+    .put({
+      url: "/api/blog/editMD",
+      data: {
+        _h: data.md,
+        title: data.title,
+        rawData: data.rawData,
+        id: data.id,
+      },
+    })
+    .then((res) => {
+      if (res.success) {
+        return res;
+      } else {
+        throw res;
+      }
+    });
+}
+
+// 删除文章
+function deleteMD(id) {
+  return ajax
+    .del({
+      url: "/api/blog/delMD",
+      data: {
+        id,
+      },
+    })
+    .then((res) => {
+      if (res.success) {
+        return res;
+      } else {
+        throw res;
+      }
+    });
+}
+
 export default {
   saveMD,
   mdList,
+  editMD,
+  saveEditMD,
+  deleteMD,
 };

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
 // 导入组件
-import { NavLink } from "react-router-dom";
-import { Checkbox, Pagination, Button, Breadcrumb, Table, Space } from "antd";
+import { NavLink, withRouter } from "react-router-dom";
+import { Checkbox, Pagination, Button, message, Table, Space } from "antd";
 
 // 导入样式
 import "@S/less/main-content.less";
@@ -37,7 +37,7 @@ const defaultData = [
   },
 ];
 
-export default function Articles(props) {
+function Articles(props) {
   // 判断哪个页面
   const {
     type,
@@ -47,6 +47,7 @@ export default function Articles(props) {
     menuType = "博客管理",
     data = defaultData,
     count = 10,
+    setState,
   } = props;
   // 表格头部
   const columns = [
@@ -65,12 +66,37 @@ export default function Articles(props) {
     {
       title: "操作",
       dataIndex: "action",
-      render: () => (
-        <Space size="middle">
-          <a>删除</a>
-          <a>{buttonType}</a>
-        </Space>
-      ),
+      render: (text, record) => {
+        return (
+          <Space size="middle">
+            <a
+              onClick={() => {
+                request.articlesApi
+                  .deleteMD(record.id)
+                  .then((res) => {
+                    message.success(res.msg);
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                    message.error(err.msg);
+                  });
+              }}
+            >
+              删除
+            </a>
+            <a
+              onClick={() => {
+                props.history.push({
+                  pathname: "/blog/new",
+                  search: "type=edit&id=" + record.id,
+                });
+              }}
+            >
+              {buttonType}
+            </a>
+          </Space>
+        );
+      },
     },
   ];
 
@@ -107,10 +133,42 @@ export default function Articles(props) {
             defaultPageSize: 10,
             showTotal: (total, range) => `共${count}条记录`,
             showSizeChanger: true,
+            onShowSizeChange: function (page, pageSize) {
+              this.defaultCurrent = page;
+              this.defaultPageSize = pageSize;
+              request.articlesApi
+                .mdList({
+                  num: page,
+                  size: pageSize,
+                })
+                .then((res) => {
+                  // console.log(res);
+                  setState((state) => res);
+                })
+                .catch((err) => {
+                  console.err(err);
+                  message.error(err.msg);
+                });
+            },
             onChange: function (page, pageSize) {
-              console.log("====================================");
-              console.log(page, pageSize);
-              console.log("====================================");
+              // console.log("====================================");
+              // console.log(page, pageSize, this);
+              // console.log("====================================");
+              this.defaultCurrent = page;
+              this.defaultPageSize = pageSize;
+              request.articlesApi
+                .mdList({
+                  num: page,
+                  size: pageSize,
+                })
+                .then((res) => {
+                  // console.log(res);
+                  setState((state) => res);
+                })
+                .catch((err) => {
+                  console.err(err);
+                  message.error(err.msg);
+                });
             },
             pageSizeOptions: [10, 15, 30, 50],
             total: count,
@@ -121,3 +179,4 @@ export default function Articles(props) {
     </section>
   );
 }
+export default withRouter(Articles);
